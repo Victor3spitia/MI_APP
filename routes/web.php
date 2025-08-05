@@ -9,9 +9,8 @@ use App\Http\Controllers\AbogadoController;
 use App\Http\Controllers\AsistenteController;
 use App\Models\Lawyer;
 use Barryvdh\DomPDF\Facade\Pdf;
-use App\Exports\LawyersExport;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Http\Controllers\LegalProcessController;
+use App\Http\Controllers\ExportController;
+
 // rutas/web.php
 Route::resource('lawyers', LawyerController::class);
 
@@ -43,17 +42,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/lawyers/{lawyer}/edit', [LawyerController::class, 'edit'])->name('lawyers.edit');
     Route::put('/lawyers/{lawyer}', [LawyerController::class, 'update'])->name('lawyers.update');
     Route::delete('/lawyers/{lawyer}', [LawyerController::class, 'destroy'])->name('lawyers.destroy');
+    
 
     // Exportaciones
-    Route::get('/lawyers/export-pdf', function () {
-        $lawyers = Lawyer::all();
-        $pdf = Pdf::loadView('exports.lawyers-pdf', compact('lawyers'));
-        return $pdf->download('abogados.pdf');
-    })->name('lawyers.export.pdf');
-
-    Route::get('/lawyers/export-excel', function () {
-        return Excel::download(new LawyersExport, 'abogados.xlsx');
-    })->name('lawyers.export.excel');
+    Route::get('/lawyers/export/pdf', [LawyerController::class, 'exportPdf'])-> name('lawyers.export.pdf');
+    Route::get('/exportar-usuarios', [ExportController::class, 'exportUsers'])->name('exportar.usuarios');
 });
 
 // Rutas de autenticación

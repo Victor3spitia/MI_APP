@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendCredentialsToLawyer;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class LawyerController extends Controller
 {
@@ -102,4 +103,15 @@ class LawyerController extends Controller
         $lawyer->delete();
         return redirect()->route('lawyers.index')->with('success', 'Abogado eliminado exitosamente.');
     }
+
+
+    public function exportPdf()
+{
+    $lawyers = Lawyer::with('user')->get();
+
+    $pdf = Pdf::loadView('exports.lawyers-pdf', compact('lawyers'));
+
+    return $pdf->download('abogados.pdf');
+}
+
 }

@@ -4,7 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+<<<<<<< HEAD
     "content-hash": "7ca4a9b748e814e3aa813bece1f4e4dc",
+=======
+    "content-hash": "d9792b576ce7ed5c8771eaac835c4474",
+>>>>>>> origin/main
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -7227,6 +7231,7 @@
             "time": "2025-03-19T14:43:43+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "laravel-lang/lang",
             "version": "12.17.1",
             "source": {
@@ -7311,6 +7316,17 @@
             },
             "dist": {
                 "type": "zip",
+=======
+            "name": "laravel/breeze",
+            "version": "v2.3.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/breeze.git",
+                "reference": "1a29c5792818bd4cddf70b5f743a227e02fbcfcd"
+            },
+            "dist": {
+                "type": "zip",
+>>>>>>> origin/main
                 "url": "https://api.github.com/repos/laravel/breeze/zipball/1a29c5792818bd4cddf70b5f743a227e02fbcfcd",
                 "reference": "1a29c5792818bd4cddf70b5f743a227e02fbcfcd",
                 "shasum": ""

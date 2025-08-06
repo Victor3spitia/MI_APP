@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Role;
 
-class User extends Authenticatable
+
+
+
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
 
@@ -52,8 +56,12 @@ class User extends Authenticatable
     /**
      * Notificación personalizada para restablecer contraseña.
      */
-    public function sendPasswordResetNotification($token)
+    public function getAvatarUrlAttribute()
     {
-        $this->notify(new \App\Notifications\CustomResetPasswordNotification($token));
+        if ($this->avatar) {
+            return asset('storage/avatars/' . $this->avatar);
+        }
+        
+        return null; // o una imagen por defecto
     }
 }

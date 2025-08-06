@@ -12,7 +12,7 @@
         <div class="overlay" id="overlay"></div>
 
         <!-- Enlace a CSS -->
-        <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+        <link rel="stylesheet" href="{{ asset('/css/dashboard.css') }}">
 
         <!-- Modal para crear nuevo abogado -->
         <div class="modal" id="createLawyerModal">
@@ -22,9 +22,8 @@
                     <button class="modal-close" id="closeModal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="{{ route('lawyers.store') }}">
-                        @csrf
-
+                    <form action="{{ route('lawyers.store') }}" method="POST">
+                       @csrf
                         <div class="form-group">
                             <label for="nombre">Nombre:</label>
                             <input type="text" id="nombre" name="nombre" required>
@@ -125,23 +124,26 @@
             </div>
         </div>
 
-        <!-- Sidebar -->
-        <div class="sidebar" id="sidebar">
-            <div class="profile">
-                <div class="profile-icon">
-                    @if(Auth::user()->foto_perfil)
-                    <img src="{{ asset('storage/' . Auth::user()->foto_perfil) }}" alt="Foto de perfil" style="width: 80px; height: 80px; border-radius: 50%;">
-                    @else
-                    <img src="{{ asset('img/default-profile.png') }}" alt="Foto por defecto" style="width: 80px; height: 80px; border-radius: 50%;">
-                    @endif
-                </div>
+<!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+    <div class="profile">
+    <input type="file" id="fileInput" accept="image/*" hidden>
+    <div class="profile-pic" onclick="document.getElementById('fileInput').click();">
+        {{-- Muestra la foto del usuario si existe, de lo contrario muestra una por defecto --}}
+        <img src="{{ Auth::user()->photo ? asset('storage/' . Auth::user()->photo) : asset('img/f4a614740649d8c495ddc7a55a2cf0d9.jpg') }}"
+     alt="Foto de Perfil"
+     width="100px"
+     height="70"
+     class="logo">
+    </div>
+                <h3>{{ Auth::user()->name }}</h3>
+                <p>{{ Auth::user()->email }}</p>
 
-            </div>
+        </div>
+
 
             <div class="nav-menu">
-                <button class="nav-btn">Consultas</button>
-                <button class="nav-btn active">Procesos</button>
-                <button class="nav-btn">Casos</button>
+
             </div>
 
             <div class="sena-logo">
@@ -220,16 +222,20 @@
                 Editar
             </button>
 
-            <form action="{{ route('lawyers.destroy', $lawyer->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('¿Estás seguro de eliminar este abogado?');">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn-delete">Eliminar</button>
-            </form>
-        </td>
-    </tr>
-    @endforeach
-</tbody>
-
+                <form action="{{ route('lawyers.destroy', $lawyer->id) }}"
+                    method="POST"
+                    class="delete-lawyer-form"
+                    data-id="{{ $lawyer->id }}"
+                    data-name="{{ $lawyer->nombre }} {{ $lawyer->apellido }}">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn-delete">
+                        Eliminar</button>
+                </form>
+                </td>
+                </tr>
+                @endforeach
+                </tbody>
                     </table>
                 </div>
             </div>
@@ -238,7 +244,6 @@
 
     <!-- Scripts -->
     
-    <script src="{{ asset('js/dashboard.js') }}"></script>
 
     <script>
     setInterval(() => {
@@ -246,4 +251,5 @@
     }, 10 * 60 * 1000); // cada 10 minutos
 </script>
 
+    <script src="{{ asset('js/dash.js') }}"></script>
 </x-app-layout>

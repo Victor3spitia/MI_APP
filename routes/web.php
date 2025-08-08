@@ -11,6 +11,7 @@ use App\Models\Lawyer;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ImageController;
+use app\http\Controllers\Auth\AbogadoAuthController;
 
 
 // rutas/web.php

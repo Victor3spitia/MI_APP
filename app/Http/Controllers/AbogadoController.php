@@ -22,4 +22,9 @@ public function crearConcepto()
     // Aquí puedes retornar una vista para emitir conceptos
 }
 
+
+
+
+
+
 }

@@ -12,7 +12,7 @@ class Role extends Model
 
     protected $table = 'roles';
 
-    protected $fillable = ['name']; // ✅ ESTA línea es la clave
+    protected $fillable = ['name']; //  ESTA línea es la clave
 
     protected $casts = [
         'created_at' => 'datetime',

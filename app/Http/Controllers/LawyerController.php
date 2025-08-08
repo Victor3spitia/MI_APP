@@ -14,7 +14,7 @@ class LawyerController extends Controller
 {
     public function index()
     {
-        $lawyers = Lawyer::with('user')->get(); // Carga con usuario relacionado si existe
+        $lawyers = Lawyer::with('user')->get();
         return view('lawyers.index', compact('lawyers'));
     }
 
@@ -30,7 +30,6 @@ class LawyerController extends Controller
             'especialidad' => 'nullable|string|max:255',
         ]);
 
-        // Crear abogado
         $lawyer = Lawyer::create([
             'nombre' => $validated['nombre'],
             'apellido' => $validated['apellido'],
@@ -41,21 +40,18 @@ class LawyerController extends Controller
             'especialidad' => $validated['especialidad'] ?? null,
         ]);
 
-        // Crear usuario
         $user = User::create([
             'name' => $validated['nombre'] . ' ' . $validated['apellido'],
             'email' => $validated['correo'],
             'password' => Hash::make($validated['numeroDocumento']),
-            'role_id' => 2, // Rol de abogado
+            'role_id' => 2,
             'numero_documento' => $validated['numeroDocumento'],
         ]);
 
-        // Asociar abogado con usuario
         $lawyer->user_id = $user->id;
         $lawyer->save();
 
-        // Enviar correo con credenciales
-        Mail::to($validated['correo'])->send(new SendCredentialsToLawyer($user, $validated['numeroDocumento']));
+        Mail::to($validated['correo'])->sendNow(new SendCredentialsToLawyer($user, $validated['numeroDocumento']));
 
         return redirect()->route('dashboard')->with('success', 'Abogado creado y credenciales enviadas.');
     }
@@ -92,7 +88,6 @@ class LawyerController extends Controller
 
     public function destroy(Lawyer $lawyer)
     {
-        // Elimina también el usuario asociado si deseas
         if ($lawyer->user_id) {
             $user = User::find($lawyer->user_id);
             if ($user) {
@@ -112,7 +107,5 @@ public function exportPdf()
 
     return $pdf->download('abogados.pdf');
 }
-
-
 
 }

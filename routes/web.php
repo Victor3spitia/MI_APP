@@ -12,6 +12,9 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ImageController;
 use app\http\Controllers\Auth\AbogadoAuthController;
+use App\Http\Controllers\LegalProcessController;
+use App\Exports\LawyersExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 
 // rutas/web.php
@@ -22,6 +25,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/conceptos/create', [App\Http\Controllers\AbogadoController::class, 'crearConcepto'])->name('conceptos.create');
     Route::get('/legal-processes/create', [App\Http\Controllers\LegalProcessController::class, 'create'])->name('legal_processes.create');
 });
+
 
 // Ruta por defecto
 Route::get('/', function () {
@@ -40,16 +44,28 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/perfil/foto', [ProfileController::class, 'editPhoto'])->name('profile.photo');
     Route::post('/perfil/foto', [ProfileController::class, 'updatePhoto'])->name('profile.photo.update');
 
+    // Exportaciones
+    Route::get('/lawyers/export-pdf', [LawyerController::class, 'exportPDF'])
+        ->name('lawyers.export.pdf');
+
+    Route::get('/lawyers/export-excel', function () {
+        return Excel::download(new LawyersExport, 'abogados.xlsx');
+    })->name('lawyers.export.excel');
+
     // Abogados (CRUD)
     Route::resource('lawyers', LawyerController::class)->except(['edit', 'update', 'destroy']);
     Route::get('/lawyers/{lawyer}/edit', [LawyerController::class, 'edit'])->name('lawyers.edit');
     Route::put('/lawyers/{lawyer}', [LawyerController::class, 'update'])->name('lawyers.update');
     Route::delete('/lawyers/{lawyer}', [LawyerController::class, 'destroy'])->name('lawyers.destroy');
     
-
     // Exportaciones
     Route::get('/lawyers/export/pdf', [LawyerController::class, 'exportPdf'])-> name('lawyers.export.pdf');
     Route::get('/exportar-usuarios', [ExportController::class, 'exportUsers'])->name('exportar.usuarios');
+    
+    // Otros accesos del abogado
+    Route::get('/mis-procesos', [AbogadoController::class, 'misProcesos'])->name('mis.procesos');
+    Route::get('/conceptos/create', [AbogadoController::class, 'crearConcepto'])->name('conceptos.create');
+    Route::get('/legal-processes/create', [LegalProcessController::class, 'create'])->name('legal_processes.create');
 });
 
 // Rutas de autenticación

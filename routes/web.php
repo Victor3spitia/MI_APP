@@ -53,16 +53,3 @@ Route::middleware(['auth'])->group(function () {
 
 // Rutas de autenticación
 require __DIR__ . '/auth.php';
-// Rutas resource para lawyers
-Route::resource('lawyers', LawyerController::class)->middleware('auth');
-
-// Grupo de rutas protegidas por autenticación
-Route::middleware('auth')->group(function() {
-    // Rutas de perfil
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
-    // CORREGIDO: Añadido name() y método específico para la ruta de subida de imágenes
-    Route::post('/upload-image', [ImageController::class, 'store'])->name('image.upload');
-});

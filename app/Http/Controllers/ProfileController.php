@@ -1,62 +1,34 @@
 <?php
 
-namespace App\Http\Controllers;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\View\View;
-
-
-
-class ProfileController extends Controller
+class ProfileController extends Migration
 {
     /**
-     * Display the user's profile form.
+     * Run the migrations.
+     *
+     * @return void
      */
-    public function edit(Request $request): View
+    public function up()
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        Schema::table('users', function (Blueprint $table) {
+            // Renombra la columna
+            $table->renameColumn('profile_image', 'profile_photos');
+        });
     }
 
     /**
-     * Update the user's profile information.
+     * Reverse the migrations.
+     *
+     * @return void
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function down()
     {
-        $request->user()->fill($request->validated());
-
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
-
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
-    }
-
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
-
-        $user = $request->user();
-
-        Auth::logout();
-
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        Schema::table('users', function (Blueprint $table) {
+            // Revierte el cambio si es necesario
+            $table->renameColumn('profile_photos', 'profile_image');
+        });
     }
 }

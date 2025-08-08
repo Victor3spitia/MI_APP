@@ -155,6 +155,8 @@ function validateForm(formData) {
     return errors;
 }
 
+
+// ===== FUNCIONES DE VALIDACIÓN para editar=====
 function validateEditForm(formData) {
     const errors = [];
 
@@ -196,6 +198,35 @@ function validateEditForm(formData) {
 
     return errors;
 }
+
+// ===== FUNCIONES DE VALIDACIÓN para el registro=====
+function validateRegisterForm(formData) {
+    const errors = [];
+    
+    // Validar campos requeridos
+    
+    if (!formData.get('correo') || formData.get('correo').trim() === '') {
+        errors.push('El correo electrónico es obligatorio');
+    }
+    
+    // NUEVAS VALIDACIONES - Campos ahora obligatorios
+    if (!formData.get('telefono') || formData.get('telefono').trim() === '') {
+        errors.push('El teléfono es obligatorio');
+    }
+    
+    if (!formData.get('especialidad') || formData.get('especialidad').trim() === '') {
+        errors.push('La especialidad es obligatoria');
+    }
+    
+    // Validar formato de correo
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (formData.get('correo') && !emailRegex.test(formData.get('correo'))) {
+        errors.push('El formato del correo electrónico no es válido');
+    }
+    
+    return errors;
+}
+
 
 // ===== FUNCIONALIDAD PRINCIPAL =====
 
@@ -558,10 +589,21 @@ function searchLawyersWithAlert() {
     }
 }
 
-// Exportar
-document.getElementById("exportBtn").addEventListener("click", function() {
-    showCustomAlert('info', 'Funcionalidad en Desarrollo', 'La exportación a Excel estará disponible próximamente.');
+//Funciones de exportación
+
+document.getElementById("exportBtn").addEventListener("click", async function () {
+    // Crear un enlace temporal para la descarga
+    const link = document.createElement("a");
+    link.href = "/export-users"; // Ajusta si tu ruta es diferente
+    link.download = "usuarios.xlsx";
+    link.style.display = "none";
+    document.body.appendChild(link);
+    // Esperar un poco y luego mostrar alerta
+    setTimeout(() => {
+        showCustomAlert('success', '¡Exportación Exitosa!', 'Los usuarios fueron exportados correctamente.');
+    }, 2000); // 1 segundo
 });
+
 
 // iOS: Prevenir zoom en inputs
 if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
@@ -587,3 +629,4 @@ document.addEventListener('DOMContentLoaded', function() {
 // Hacer funciones disponibles globalmente
 window.showCustomAlert = showCustomAlert;
 window.hideCustomAlert = hideCustomAlert;
+

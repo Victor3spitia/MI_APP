@@ -8,6 +8,7 @@
 
     <!-- Contenido sin contenedores restrictivos -->
     <div class="dashboard-wrapper">
+        
         <!-- Overlay para móviles -->
         <div class="overlay" id="overlay"></div>
 
@@ -23,7 +24,7 @@
                 </div>
                 <div class="modal-body">
                     <form action="{{ route('lawyers.store') }}" method="POST">
-                       @csrf
+                      @csrf
                         <div class="form-group">
                             <label for="nombre">Nombre:</label>
                             <input type="text" id="nombre" name="nombre" required>
@@ -129,19 +130,14 @@
     <div class="profile">
     <input type="file" id="fileInput" accept="image/*" hidden>
     <div class="profile-pic" onclick="document.getElementById('fileInput').click();">
-        {{-- Muestra la foto del usuario si existe, de lo contrario muestra una por defecto --}}
-        <img src="{{ Auth::user()->photo ? asset('storage/' . Auth::user()->photo) : asset('img/f4a614740649d8c495ddc7a55a2cf0d9.jpg') }}"
-     alt="Foto de Perfil"
-     width="100px"
-     height="70"
-     class="logo">
+        <img id="profileImage" src="{{ Auth::user()->profile_photo ? asset('storage/' . 
+        Auth::user()->profile_photo) : asset('img/default-user.png') }}" alt="Foto de perfil" class="rounded-full w-32 h-32 object-cover">
     </div>
                 <h3>{{ Auth::user()->name }}</h3>
                 <p>{{ Auth::user()->email }}</p>
 
         </div>
-
-
+ 
             <div class="nav-menu">
 
             </div>
@@ -226,16 +222,18 @@
                     method="POST"
                     class="delete-lawyer-form"
                     data-id="{{ $lawyer->id }}"
-                    data-name="{{ $lawyer->nombre }} {{ $lawyer->apellido }}">
+                    data-name="{{ $lawyer->nombre }} {{ $lawyer->apellido }}"
+                    style="display: inline;">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn-delete">
                         Eliminar</button>
                 </form>
-                </td>
-                </tr>
-                @endforeach
-                </tbody>
+        </td>
+    </tr>
+    @endforeach
+</tbody>
+
                     </table>
                 </div>
             </div>
@@ -252,4 +250,14 @@
 </script>
 
     <script src="{{ asset('js/dash.js') }}"></script>
+    
+
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+<form id="uploadForm" enctype="multipart/form-data">
+    <input type="file" name="image" required>
+    <button type="submit">Subir Imagen</button>
+</form>
+
+
 </x-app-layout>

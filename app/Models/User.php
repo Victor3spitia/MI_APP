@@ -11,6 +11,7 @@ use App\Models\Role;
 
 
 
+
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
@@ -19,12 +20,30 @@ class User extends Authenticatable implements MustVerifyEmail
      * Los atributos que se pueden asignar en masa.
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'role_id',
-        'foto_perfil',
+            'name',
+            'email',
+            'password',
+            'password_changed',
+            'avatar', // Agregar esta línea
+            'role_id', // Asegúrate de que este campo exista en tu tabla users
+            'profile_photos' // Agregar esta línea si usas profile_photo en la migración
     ];
+
+    
+
+    protected $casts = [
+    'password_changed' => 'boolean',
+    'password_changed_at' => 'datetime',
+];
+
+// Método para marcar contraseña como cambiada
+public function markPasswordAsChanged()
+{
+    $this->update([
+        'password_changed' => true,
+        'password_changed_at' => now()
+    ]);
+}
 
     /**
      * Los atributos que deben ocultarse al serializar.
